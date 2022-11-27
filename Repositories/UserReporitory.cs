@@ -124,4 +124,45 @@ internal class UserReporitory
 
         return data.FirstOrDefault();
     }
+
+    public async Task Insert(User user)
+    {
+        var queryCommand = @"
+            INSERT INTO tblUsuario(Nome, UsuarioStatusId, Email)
+            VALUES(@Name, 1, @Email";
+
+        await _dbConnection.ExecuteAsync(
+            queryCommand,
+            user);
+    }
+
+    public async Task Insert(IEnumerable<User> users)
+    {
+        var queryCommand = @"
+            INSERT INTO tblUsuario(Nome, UsuarioStatusId, Email)
+            VALUES(@Name, 1, @Email)";
+
+        await _dbConnection.ExecuteAsync(
+            queryCommand, 
+            users);
+    }
+
+    public async Task InsertPipelined(IEnumerable<User> users)
+    {
+        var queryCommand = @"
+            INSERT INTO tblUsuario(Nome, UsuarioStatusId, Email)
+            VALUES(@Name, 1, @Email)"
+        ;
+
+        var commandDefinition = new CommandDefinition(
+            queryCommand,
+            users,
+            transaction: null,
+            commandTimeout: null,
+            CommandType.Text,
+            CommandFlags.Pipelined,
+            default);
+
+        await _dbConnection.ExecuteAsync(commandDefinition);
+    }
 }

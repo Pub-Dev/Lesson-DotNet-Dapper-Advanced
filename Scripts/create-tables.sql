@@ -33,43 +33,9 @@ VALUES
 INSERT INTO tblUsuario(Nome, Sobrenome, UsuarioStatusID, Email)
 VALUES
 	('Mayara', 'Toku', 1, 'mayara.toku@pubdev.com'),
-	(N'Jo„o', 'Silva', 2, 'joao.silva@pubdev.com'),
+	(N'Jo√£o', 'Augusto', 2, 'joao.augusto@pubdev.com'),
 	('Alef', 'Carlos', 3, 'alef.carlos@pubdev.com')
 
-
-CREATE TABLE tblPedido
-(
-	PedidoID INT IDENTITY(1,1) NOT NULL,
-	Pago BIT DEFAULT(0) NOT NULL,
-	DataCriacao DATETIME DEFAULT(GETDATE()),
-	CONSTRAINT [PK_tblPedido_PedidoID] PRIMARY KEY(PedidoID)
-)
-
-CREATE TABLE tblPedidoItem
-(
-	PedidoItemID INT IDENTITY(1,1) NOT NULL,
-	PedidoID INT NOT NULL,
-	Item NVARCHAR(500) NOT NULL,
-	ValorUnitario DECIMAL(18,2) NOT NULL,
-	Quantidade INT NOT NULL,
-	DataCriacao DATETIME DEFAULT(GETDATE()),
-	CONSTRAINT [PK_tblPedidoItem_PedidoItemID] PRIMARY KEY(PedidoItemID),
-	CONSTRAINT [FK_tblPedidoItem_tblPedido_PedidoID] FOREIGN KEY(PedidoID) REFERENCES tblPedido(PedidoID)
-)
-
-INSERT INTO tblPedido(Pago)
-VALUES
-	(1),
-	(0)
-
-INSERT INTO tblPedidoItem(PedidoID,Item,ValorUnitario,Quantidade)
-VALUES
-	(1, 'Camiseta PubDev - Deve ser CACHE', 69.99, 1),
-	(1, 'Camiseta PubDev - T· Pronto! SÛ Falta Testar...', 69.99, 3),
-	(1, 'Camiseta PubDev - O meu cÛdigo esta compilando', 69.99, 1),
-	(2, 'Camiseta PubDev - CSS È Incrivel', 69.99, 20),
-	(2, 'Camiseta PubDev - Update Sem Where', 69.99, 5)
-	
 CREATE TABLE tblCor
 (
 	CorID INT IDENTITY(1,1),
@@ -110,10 +76,43 @@ INSERT INTO tblVeiculoTipo(Nome)
 VALUES
 	(N'Carro'),
 	(N'Moto'),
-	(N'Caminh„o')
+	(N'Caminh√£o')
 
 INSERT INTO tblVeiculo(Placa,CorID,VeiculoTipoID)
 VALUES
 	('QTP5F71',1,1),
 	('BQZ5Z48',2,2),
 	('QAA5T47',4,3)
+
+CREATE TABLE tblPedido
+(
+	PedidoID INT IDENTITY(1,1) NOT NULL,
+	Pago BIT DEFAULT(0) NOT NULL,
+	DataCriacao DATETIME DEFAULT(GETDATE()),
+	CONSTRAINT [PK_tblPedido_PedidoID] PRIMARY KEY(PedidoID)
+)
+
+CREATE TABLE tblPedidoItem
+(
+	PedidoItemID INT IDENTITY(1,1) NOT NULL,
+	PedidoID INT NOT NULL,
+	Item NVARCHAR(500) NOT NULL,
+	ValorUnitario DECIMAL(18,2) NOT NULL,
+	Quantidade INT NOT NULL,
+	DataCriacao DATETIME DEFAULT(GETDATE()),
+	CONSTRAINT [PK_tblPedidoItem_PedidoItemID] PRIMARY KEY(PedidoItemID),
+	CONSTRAINT [FK_tblPedidoItem_tblPedido_PedidoID] FOREIGN KEY(PedidoID) REFERENCES tblPedido(PedidoID)
+)
+
+INSERT INTO tblPedido(Pago)
+VALUES
+	(1),
+	(0)
+
+INSERT INTO tblPedidoItem(PedidoID,Item,ValorUnitario,Quantidade)
+VALUES
+	(1, 'Camiseta PubDev - Deve ser CACHE', 69.99, 1),
+	(1, 'Camiseta PubDev - T√° Pronto! S√≥ Falta Testar...', 69.99, 3),
+	(1, 'Camiseta PubDev - O meu c√≥digo esta compilando', 69.99, 1),
+	(2, 'Camiseta PubDev - CSS √© Incrivel', 69.99, 20),
+	(2, 'Camiseta PubDev - Update Sem Where', 69.99, 5)
