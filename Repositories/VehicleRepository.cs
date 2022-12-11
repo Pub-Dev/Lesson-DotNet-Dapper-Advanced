@@ -59,22 +59,22 @@ internal class VehicleRepository
     {
         var queryCommand = @"
             SELECT 
-	        veiculo.VeiculoID AS VehicleId,
-	        veiculo.Placa AS Plate,
-	        veiculo.DataCriacao AS CreateDate,
-	        cor.CorID AS ColorId,
-	        cor.Nome AS Name,
-	        cor.DataCriacao AS CreateDate,
-	        tipo.VeiculoTipoID AS TypeId,
-	        tipo.Nome AS Name,
-	        tipo.DataCriacao AS CreateDate
-        FROM tblVeiculo veiculo
-        INNER JOIN tblCor cor on cor.CorID = veiculo.CorID
-        INNER JOIN tblVeiculoTipo tipo on tipo.VeiculoTipoID = veiculo.VeiculoTipoID";
+	            veiculo.VeiculoID AS VehicleId,
+	            veiculo.Placa AS Plate,
+	            veiculo.DataCriacao AS CreateDate,
+	            cor.CorID AS ColorId,
+	            cor.Nome AS Name,
+	            cor.DataCriacao AS CreateDate,
+	            tipo.VeiculoTipoID AS TypeId,
+	            tipo.Nome AS Name,
+	            tipo.DataCriacao AS CreateDate
+            FROM tblVeiculo veiculo
+            INNER JOIN tblCor cor on cor.CorID = veiculo.CorID
+            INNER JOIN tblVeiculoTipo tipo on tipo.VeiculoTipoID = veiculo.VeiculoTipoID";
 
         return await _dbConnection.QueryAsync<Vehicle, VehicleColor, VehicleType, Vehicle>(
                     queryCommand,
-                    (vehicle, vehicleColor, vehicleType) =>
+                    (Vehicle vehicle, VehicleColor vehicleColor, VehicleType vehicleType) =>
                     {
                         vehicle.Color = vehicleColor;
 
@@ -82,6 +82,6 @@ internal class VehicleRepository
 
                         return vehicle;
                     },
-                    splitOn: "ColorId,TypeId");
+                    splitOn: "VehicleId,ColorId,TypeId");
     }
 }

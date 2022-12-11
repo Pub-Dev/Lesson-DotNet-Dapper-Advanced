@@ -4,37 +4,36 @@ GO
 USE [pub-dev];
 GO
 
-CREATE TABLE tblUsuarioStatus
+CREATE TABLE tblStatus
 (
-	UsuarioStatusID INT IDENTITY(1,1) NOT NULL,
+	StatusID INT IDENTITY(1,1) NOT NULL,
 	Nome NVARCHAR(50) NOT NULL,
 	DataCriacao DATETIME DEFAULT(GETDATE()),
-	CONSTRAINT [PK_tblUsuarioStatus_UsuarioStatusID] PRIMARY KEY(UsuarioStatusID)
+	CONSTRAINT [PK_tblStatus_StatusID] PRIMARY KEY(StatusID)
 )
 
 CREATE TABLE tblUsuario
 (
 	UsuarioID INT IDENTITY(1,1) NOT NULL,
-	Nome NVARCHAR(200) NOT NULL,
-	Sobrenome NVARCHAR(200) NOT NULL,
+	Nome NVARCHAR(200) NOT NULL,	
 	Email NVARCHAR(200),
 	DataCriacao DATETIME DEFAULT(GETDATE()),
-	UsuarioStatusID INT NOT NULL,
+	StatusID INT NOT NULL,
 	CONSTRAINT [PK_tblUsuario_UsuarioID] PRIMARY KEY(UsuarioID),
-	CONSTRAINT [FK_tblUsuario_tblUsuarioStatus_UsuarioStatusID] FOREIGN KEY(UsuarioStatusID) REFERENCES tblUsuarioStatus(UsuarioStatusID)
+	CONSTRAINT [FK_tblUsuario_tblStatus_StatusID] FOREIGN KEY(StatusID) REFERENCES tblStatus(StatusID)
 )
 
-INSERT INTO tblUsuarioStatus(Nome)
+INSERT INTO tblStatus(Nome)
 VALUES
 	('Ativo'),
 	('Bloqueado'),
 	('Removido')
 
-INSERT INTO tblUsuario(Nome, Sobrenome, UsuarioStatusID, Email)
+INSERT INTO tblUsuario(Nome, StatusID, Email)
 VALUES
-	('Mayara', 'Toku', 1, 'mayara.toku@pubdev.com'),
-	(N'João', 'Augusto', 2, 'joao.augusto@pubdev.com'),
-	('Alef', 'Carlos', 3, 'alef.carlos@pubdev.com')
+	('Mayara Toku', 1, 'mayara.toku@pubdev.com'),
+	(N'João Augusto', 2, 'joao.augusto@pubdev.com'),
+	('Alef Carlos', 3, 'alef.carlos@pubdev.com')
 
 CREATE TABLE tblCor
 (

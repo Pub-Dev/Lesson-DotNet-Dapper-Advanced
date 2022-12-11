@@ -34,17 +34,17 @@ internal class UserReporitory
                 usuario.Nome AS Name,
                 usuario.Email AS Email,
                 usuario.DataCriacao AS CreateDate,
-                status.UsuarioStatusID AS StatusID,
+                status.StatusId AS StatusId,
                 status.Nome AS Name,
                 status.DataCriacao AS CreateDate
             FROM dbo.tblUsuario usuario
-            INNER JOIN dbo.tblUsuarioStatus status ON
-                status.UsuarioStatusID = usuario.UsuarioStatusID";
+            INNER JOIN dbo.tblStatus status ON
+                status.StatusId = usuario.StatusId";
 
         return await _dbConnection.QueryAsync<User, Status, User>(
             queryCommand,
             GetUserWithStatus,
-            splitOn: "StatusID");
+            splitOn: "UserId,StatusId");
     }
 
     private User GetUserWithStatus(User user, Status status)
@@ -92,18 +92,18 @@ internal class UserReporitory
                 usuario.Nome AS Name,
                 usuario.Email AS Email,
                 usuario.DataCriacao AS CreateDate,
-                status.UsuarioStatusID AS StatusID,
+                status.StatusId AS StatusId,
                 status.Nome AS Name,
                 status.DataCriacao AS CreateDate
             FROM dbo.tblUsuario usuario
-            INNER JOIN dbo.tblUsuarioStatus status ON
-                status.UsuarioStatusID = usuario.UsuarioStatusID
+            INNER JOIN dbo.tblStatus status ON
+                status.StatusId = usuario.StatusId
             WHERE
                 usuario.UsuarioID = @UserId";
 
         var data = await _dbConnection.QueryAsync<User, Status, User>(
             queryCommand,
-            (user, status) => new User()
+            (User user, Status status) => new User()
             {
                 UserId = user.UserId,
                 Name = user.Name,
@@ -119,38 +119,38 @@ internal class UserReporitory
             new
             {
                 userId
-            }, 
-            splitOn: "StatusID");
+            },
+            splitOn: "UserId,StatusId");
 
         return data.FirstOrDefault();
     }
 
-    public async Task Insert(User user)
+    public async Task InsertAsync(User user)
     {
         var queryCommand = @"
-            INSERT INTO tblUsuario(Nome, UsuarioStatusId, Email)
-            VALUES(@Name, 1, @Email";
+            INSERT INTO tblUsuario(Nome, StatusId, Email)
+            VALUES(@Name, 1, @Email)";
 
         await _dbConnection.ExecuteAsync(
             queryCommand,
             user);
     }
 
-    public async Task Insert(IEnumerable<User> users)
+    public async Task InsertAsync(IEnumerable<User> users)
     {
         var queryCommand = @"
-            INSERT INTO tblUsuario(Nome, UsuarioStatusId, Email)
+            INSERT INTO tblUsuario(Nome, StatusId, Email)
             VALUES(@Name, 1, @Email)";
 
         await _dbConnection.ExecuteAsync(
-            queryCommand, 
+            queryCommand,
             users);
     }
 
-    public async Task InsertPipelined(IEnumerable<User> users)
+    public async Task InsertPipelinedAsync(IEnumerable<User> users)
     {
         var queryCommand = @"
-            INSERT INTO tblUsuario(Nome, UsuarioStatusId, Email)
+            INSERT INTO tblUsuario(Nome, StatusId, Email)
             VALUES(@Name, 1, @Email)"
         ;
 
@@ -164,5 +164,35 @@ internal class UserReporitory
             default);
 
         await _dbConnection.ExecuteAsync(commandDefinition);
+    }
+
+    public async Task<IEnumerable<User>> GetAllUsingMultiAsync()
+    {
+        var queryCommand = @"
+            SELECT
+                usuario.UsuarioID AS UserId,
+                usuario.Nome AS Name,
+                usuario.Email AS Email,
+                usuario.DataCriacao AS CreateDate,
+                usuario.StatusId AS StatusId
+            FROM dbo.tblUsuario usuario
+
+            SELECT 
+                status.StatusId as StatusId,
+                status.Nome as Name
+            FROM dbo.tblStatus status";
+
+        var gridReader = await _dbConnection.QueryMultipleAsync(queryCommand);
+
+        var users = await gridReader.ReadAsync<User>();
+
+        var statuses = await gridReader.ReadAsync<Status>();
+
+        foreach (var user in users)
+        {
+            user.Status = statuses.FirstOrDefault(x => x.StatusId == user.StatusId);
+        }
+
+        return users;
     }
 }

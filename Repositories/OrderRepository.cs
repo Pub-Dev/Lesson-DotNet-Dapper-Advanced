@@ -51,7 +51,7 @@ internal class OrderReporitory
 
                 return orderEntry;
             },
-            splitOn: "OrderId"
+            splitOn: "OrderId,OrderId"
             );
 
         return ordersDictionary.Values;

@@ -30,6 +30,10 @@ async Task UserAsync()
 
     Console.WriteLine(string.Join(",\n-----------------\n", await userRepository.GetByIdWithStatusAsync(1)));
 
+    Console.WriteLine("*** Get all users using Multi! ***");
+
+    Console.WriteLine(string.Join(",\n-----------------\n", await userRepository.GetAllUsingMultiAsync()));
+
     Console.WriteLine("*** Insert Users One by one ***");
 
     var newUser1 = new User()
@@ -38,7 +42,7 @@ async Task UserAsync()
         Email = "tiago.totti@pubdev.com"
     };
 
-    await userRepository.Insert(newUser1);
+    await userRepository.InsertAsync(newUser1);
 
     var newUser2 = new User()
     {
@@ -46,11 +50,11 @@ async Task UserAsync()
         Email = "peterson.silva@pubdev.com"
     };
 
-    await userRepository.Insert(newUser2);
+    await userRepository.InsertAsync(newUser2);
 
     Console.WriteLine(string.Join(",\n-----------------\n", await userRepository.GetWithStatusAsync()));
 
-    Console.WriteLine("*** Insert Users with Enumerable ***");
+    Console.WriteLine("*** Insert Users using foreach***");
 
     var users = new List<User>
     {
@@ -66,13 +70,20 @@ async Task UserAsync()
         }
     };
 
-    await userRepository.Insert(users);
+    foreach (var user in users)
+    {
+        await userRepository.InsertAsync(user);
+    }
+
+    Console.WriteLine("*** Insert Users with Enumerable ***");
+
+    await userRepository.InsertAsync(users);
 
     Console.WriteLine(string.Join(",\n-----------------\n", await userRepository.GetWithStatusAsync()));
 
     Console.WriteLine("*** Insert Users Pipelined ***");
 
-    await userRepository.InsertPipelined(users);    
+    await userRepository.InsertPipelinedAsync(users);    
 }
 
 async Task VehicleAsync()
