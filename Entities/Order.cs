@@ -11,7 +11,7 @@ internal class Order
 {
     public int OrderId { get; set; }
     public bool Paid { get; set; }
-    public IList<Item>? Items { get; set; }
+    public IList<Item>? Items { get; set; } = new List<Item>();
     public decimal? Total => Items?.Sum(x => x.Value * x.Quantity);
 
     public override string ToString()

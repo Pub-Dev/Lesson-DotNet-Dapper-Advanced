@@ -82,6 +82,6 @@ internal class VehicleRepository
 
                         return vehicle;
                     },
-                    splitOn: "VehicleId,ColorId,TypeId");
+                    splitOn: "ColorId,TypeId");
     }
 }

@@ -12,7 +12,7 @@ var connectionMars = new SqlConnection(connectionStringMars);
 
 async Task UserAsync()
 {
-    var userRepository = new UserReporitory(connectionMars);
+    var userRepository = new UserReporitory(connection);
 
     Console.WriteLine("*** Get all users! ***");
 
@@ -83,7 +83,7 @@ async Task UserAsync()
 
     Console.WriteLine("*** Insert Users Pipelined ***");
 
-    await userRepository.InsertPipelinedAsync(users);    
+    await userRepository.InsertPipelinedAsync(users);
 }
 
 async Task VehicleAsync()

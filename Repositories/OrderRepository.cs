@@ -20,9 +20,7 @@ internal class OrderReporitory
         var queryCommand = @"
             SELECT
                 pedido.PedidoID AS OrderId,
-                pedido.Pago AS Paid,
-	            pedido.DataCriacao AS CreateDate,
-	            item.PedidoID AS OrderId,
+                pedido.Pago AS Paid,	            
 	            item.PedidoItemID AS ItemId,
 	            item.Item AS Name,
 	            item.ValorUnitario AS Value,
@@ -34,7 +32,7 @@ internal class OrderReporitory
 
         await _dbConnection.QueryAsync<Order, Item, Order>(
             queryCommand,
-            (order, item) => 
+            (Order order, Item item) => 
             {
                 Order? orderEntry;
 
@@ -42,16 +40,14 @@ internal class OrderReporitory
                 {
                     orderEntry = order;
 
-                    orderEntry.Items = orderEntry.Items ?? new List<Item>();
-
                     ordersDictionary.Add(orderEntry.OrderId, orderEntry);
                 }
 
-                orderEntry.Items?.Add(item);
+                orderEntry.Items.Add(item);
 
                 return orderEntry;
             },
-            splitOn: "OrderId,OrderId"
+            splitOn: "ItemId"
             );
 
         return ordersDictionary.Values;

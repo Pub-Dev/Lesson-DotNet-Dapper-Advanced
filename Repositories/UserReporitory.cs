@@ -44,7 +44,7 @@ internal class UserReporitory
         return await _dbConnection.QueryAsync<User, Status, User>(
             queryCommand,
             GetUserWithStatus,
-            splitOn: "UserId,StatusId");
+            splitOn: "StatusId");
     }
 
     private User GetUserWithStatus(User user, Status status)
@@ -120,7 +120,7 @@ internal class UserReporitory
             {
                 userId
             },
-            splitOn: "UserId,StatusId");
+            splitOn: "CreateDate");
 
         return data.FirstOrDefault();
     }
