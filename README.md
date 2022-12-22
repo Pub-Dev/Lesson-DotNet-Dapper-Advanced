@@ -13,7 +13,7 @@ Lembrando que para executar o projeto existe um docker-compose com o SQL server,
 
 Video:
 
-- 📼 [video](TBD) 📼
+- 📼 [video](https://youtu.be/JM0ZPhBtf6I) 📼
 
 De uma inha na nossa Loja Oficial:
 
